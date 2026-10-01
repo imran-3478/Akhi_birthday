@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Happy Birthday Akhi — A 3D Love Keepsake</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;overflow-x:hidden}
+body{background:#050307;color:#f8ead8;font-family:Georgia,"Noto Serif Bengali",serif}
+#fx{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+#candle{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(circle at 50% 50%,transparent 25%,rgba(0,0,0,.55) 100%)}
+.app{min-height:100vh;position:relative;z-index:2;display:grid;place-items:center;padding:80px 18px 95px}
+.header{position:fixed;top:18px;left:0;right:0;text-align:center;z-index:20}
+.header .mini{letter-spacing:4px;text-transform:uppercase;font-size:11px;opacity:.65}
+.header h1{margin:5px 0 0;font-size:clamp(25px,5vw,48px);color:#e9c67d;text-shadow:0 0 25px #9b5a27}
+.book{width:min(1080px,94vw);height:min(690px,68vw);min-height:530px;position:relative;perspective:2200px;transform-style:preserve-3d}
+.book-shell{position:absolute;inset:0;transform-style:preserve-3d;filter:drop-shadow(0 40px 30px rgba(0,0,0,.65))}
+.spread{position:absolute;inset:0;padding:18px;border-radius:13px;background:linear-gradient(90deg,#201017,#120b0d,#201017);box-shadow:inset 0 0 35px #000;display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.page{background:linear-gradient(105deg,#f8edd9,#ead8bb 55%,#f7ebd8);color:#3a2630;position:relative;overflow:hidden;padding:42px 42px;box-shadow:inset 0 0 28px rgba(72,37,18,.15)}
+.page:before{content:"";position:absolute;inset:12px;border:1px solid rgba(102,62,39,.25);pointer-events:none}
+.left{border-radius:7px 0 0 7px}.right{border-radius:0 7px 7px 0}
+.cover{position:absolute;inset:0;border-radius:14px;background:linear-gradient(135deg,#1b080f 0,#611a37 45%,#260913 100%);border:5px solid #1a090f;transform-origin:left center;transform-style:preserve-3d;z-index:10;transition:transform 1.8s cubic-bezier(.16,.82,.15,1);box-shadow:18px 0 30px rgba(0,0,0,.45),inset 0 0 35px rgba(0,0,0,.45)}
+.cover:after{content:"";position:absolute;inset:13px;border:2px solid #cda65b;border-radius:9px;box-shadow:inset 0 0 20px rgba(216,170,88,.15)}
+.open .cover{transform:rotateY(-178deg)}
+.coverFace{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:40px;backface-visibility:hidden}
+.coverFace.backface{transform:rotateY(180deg);background:linear-gradient(135deg,#421127,#1a0710)}
+.orn{font-size:34px;letter-spacing:15px;color:#dfb968}
+.cover h2{font-size:clamp(34px,6vw,72px);line-height:1.02;margin:15px 0;color:#efd08b;text-shadow:0 2px 12px #000}
+.name{font-size:clamp(38px,7vw,80px);color:#fff0dc}
+.badge{border:1px solid #d9b366;border-radius:99px;padding:10px 20px;color:#edcf8b;margin-top:18px}
+.leftTitle{text-align:center;color:#762445;font-size:25px}
+.polaroid{width:min(78%,330px);margin:25px auto;background:#fff;padding:12px 12px 38px;box-shadow:0 20px 35px #0003;transform:rotate(-2deg)}
+.photo{height:250px;background:radial-gradient(circle at 50% 20%,#ffd995,#bd6680 40%,#29152a 90%);display:grid;place-items:center;font-size:75px}
+.caption{text-align:center;color:#4c2835;margin:10px 0 0;font-family:cursive}
+.memory{line-height:1.8;text-align:center;font-size:16px}
+.pageNo{position:absolute;bottom:18px;right:28px;font-size:11px;opacity:.55}
+.kicker{letter-spacing:3px;text-transform:uppercase;color:#9b6b3d;font-size:12px}
+.reason{font-size:clamp(27px,3.6vw,46px);font-weight:bold;line-height:1.15;color:#70203f;margin:15px 0}
+.note{font-size:18px;line-height:1.8}
+.quote{font-size:55px;color:#c79754;line-height:.7;opacity:.55}
+.secret{margin-top:28px;padding:17px;border-left:3px solid #b17b45;background:rgba(255,255,255,.35);font-style:italic;line-height:1.7}
+.controls{position:fixed;bottom:19px;left:0;right:0;display:flex;justify-content:center;gap:9px;flex-wrap:wrap;z-index:30}
+button{font:inherit;color:#fff;background:rgba(255,255,255,.08);border:1px solid rgba(216,170,88,.55);border-radius:999px;padding:11px 17px;cursor:pointer;backdrop-filter:blur(10px)}
+button:hover{background:rgba(216,170,88,.17)}
+#open{background:#7a2748}
+#custom{background:rgba(255,255,255,.12)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(12px);z-index:100;display:none;place-items:center;padding:20px}
+.modal.show{display:grid}.panel{width:min(720px,95vw);max-height:85vh;overflow:auto;background:#211018;border:1px solid #b58a4b;border-radius:20px;padding:22px;box-shadow:0 25px 80px #000}
+.panel h2{margin-top:0;color:#e7c578}.row{display:grid;gap:7px;margin:12px 0}
+input,textarea{width:100%;background:#10080d;color:#fff0dc;border:1px solid #654738;border-radius:10px;padding:10px;font:inherit}textarea{min-height:90px;resize:vertical}
+.modalActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
+.confetti{position:fixed;z-index:90;top:-25px;width:9px;height:15px;animation:fall 3.6s linear forwards}
+.spark{position:fixed;z-index:110;pointer-events:none;animation:spark 1s ease-out forwards}
+@keyframes fall{to{transform:translateY(115vh) rotate(900deg);opacity:0}}
+@keyframes spark{to{transform:translate(var(--x),var(--y)) scale(1.5) rotate(300deg);opacity:0}}
+@media(max-width:720px){.app{padding-top:90px}.book{height:650px;min-height:0}.spread{grid-template-columns:1fr;padding:9px}.left{display:none}.right{border-radius:7px;padding:35px 25px}.photo{height:190px}.open .cover{transform:rotateY(-178deg)}.book{width:95vw}}
+</style>
+</head>
+<body>
+<canvas id="fx"></canvas><div id="candle"></div>
+<div class="header"><div class="mini">A cinematic birthday keepsake</div><h1>Happy Birthday, আখি ❤️</h1></div>
+
+<main class="app">
+<div class="book" id="book">
+<div class="book-shell">
+<div class="spread">
+<section class="page left">
+<h2 class="leftTitle">আজকের দিনটা শুধু তোমার 🌹</h2>
+<div class="polaroid"><div class="photo">🎂</div><p class="caption">Happy Birthday, Akhi</p></div>
+<p class="memory">তোমার জন্মদিন মানে শুধু ক্যালেন্ডারের একটি দিন নয়—এটা সেই দিন, যেদিন পৃথিবী একজন বিশেষ মানুষকে পেয়েছিল।</p>
+<div class="pageNo">A birthday made with love</div>
+</section>
+<section class="page right">
+<div class="kicker" id="kicker">Birthday Wish 01</div>
+<div class="quote">“</div>
+<div class="reason" id="reason"></div>
+<div class="note" id="note"></div>
+<div class="secret" id="secret"></div>
+<div class="pageNo" id="pageNo">01 / 12</div>
+</section>
+</div>
+
+<div class="cover">
+<div class="coverFace">
+<div><div class="orn">✦ ❧ ✦</div><h2>Happy<br>Birthday</h2><div class="name">আখি</div><div class="orn">✦ ❧ ✦</div><div class="badge">A Birthday Love Story</div></div>
+</div>
+<div class="coverFace backface"><div><div class="orn">♡</div><h2>For You,<br>Always</h2><p>একটি ছোট্ট স্মৃতি, যা আবার পড়া যাবে।</p></div></div>
+</div>
+</div>
+</div>
+</main>
+
+<div class="controls">
+<button id="open">📖 Birthday Book খুলুন</button>
+<button id="prev">← আগের</button>
+<button id="next">পরের →</button>
+<button id="music">🎵 Music</button>
+<button id="custom">⚙️ Customize</button>
+</div>
+
+<div class="modal" id="modal">
+<div class="panel">
+<h2>💌 Birthday Wish Customizer</h2>
+<p style="opacity:.7">আপনি ১২টি birthday message ও secret note নিজের মতো করে বদলাতে পারবেন।</p>
+<div id="form"></div>
+<div class="modalActions"><button id="save">💾 Save</button><button id="reset">↺ Restore Defaults</button><button id="cancel">Close</button></div>
+</div>
+</div>
+
+<script>
+const defaults=[
+["তোমার হাসি","তোমার হাসিটা যেন আজকের সব candle-এর থেকেও বেশি উজ্জ্বল।","আজ শুধু হাসতে থাকো—কারণ তোমার হাসি কারও পুরো দিন বদলে দিতে পারে।"],
+["তোমার স্বপ্ন","তোমার নতুন বছরের প্রতিটি স্বপ্ন যেন ধীরে ধীরে সত্যি হয়ে ওঠে।","তোমার স্বপ্নের পথে যতটা পারি, পাশে থাকার ইচ্ছেটা আজও একই।"],
+["তোমার শান্তি","তোমার জীবনে এমন শান্তি আসুক, যা কোনো দুশ্চিন্তা সহজে ছুঁতে না পারে।","আজকের wish-এর সবচেয়ে বড় অংশ—তুমি ভালো থেকো।"],
+["তোমার সাহস","নতুন বয়স তোমাকে আরও সাহসী, আরও স্বাধীন আর আরও আত্মবিশ্বাসী করে তুলুক।","যেদিন কঠিন লাগবে, মনে রেখো—তুমি যতটা ভাবো, তার চেয়েও শক্তিশালী।"],
+["তোমার হাসির কারণ","তোমার মুখে হাসি রাখার মতো অসংখ্য সুন্দর মুহূর্ত তোমার জীবনে আসুক।","তোমার সুখ যেন কখনো ছোট কোনো কারণের ওপর নির্ভর না করে।"],
+["তোমার ভালোবাসা","তোমার চারপাশে এমন মানুষ থাকুক যারা তোমাকে সম্মান করবে, বুঝবে এবং যত্ন নেবে।","ভালোবাসা যেন তোমার জীবনে সবসময় নিরাপদ একটি জায়গা হয়।"],
+["তোমার সাফল্য","এই নতুন বছরে তোমার পরিশ্রমের সুন্দর ফল তুমি নিজের চোখে দেখতে পাও।","প্রতিটি ছোট achievement-ও celebrate করার মতো হোক।"],
+["তোমার দিনগুলো","সাধারণ দিনগুলোও যেন তোমার কাছে ছোট ছোট আনন্দের গল্প হয়ে থাকে।","কফি, বৃষ্টি, গান, আকাশ—সবকিছুর মধ্যে নতুন আনন্দ খুঁজে পাও।"],
+["তোমার স্মৃতিগুলো","এই বছর এমন স্মৃতি জমুক, যেগুলো অনেক বছর পরেও মনে করে হাসতে পারবে।","কিছু মুহূর্ত ছবি ছাড়াই হৃদয়ে থেকে যায়।"],
+["তোমার আগামীকাল","আগামীকাল যেন আজকের চেয়েও একটু বেশি সুন্দর হয়।","ভবিষ্যৎ নিয়ে ভয় নয়—আশা নিয়ে এগিয়ে যেও।"],
+["তোমার বিশেষত্ব","তুমি নিজের মতো করেই বিশেষ—কাউকে অনুকরণ করার প্রয়োজন নেই।","তোমার সবচেয়ে সুন্দর version-টা হলো তোমার নিজের version।"],
+["শুভ জন্মদিন, আখি","সবশেষে শুধু এটুকুই—শুভ জন্মদিন, আখি। তোমার জীবন ভালোবাসা, শান্তি, হাসি আর সুন্দর মানুষের গল্পে ভরে উঠুক। ❤️","আজকের দিনটা মনে রেখো। তুমি পৃথিবীতে এসেছিলে—এটাই উদযাপন করার মতো একটি সুন্দর কারণ। 🌹"]
+];
+let data=JSON.parse(localStorage.getItem("akhiBirthdayBook")||"null")||defaults.map(x=>[...x]);
+let i=0,opened=false;
+const $=id=>document.getElementById(id);
+function render(){
+ $("kicker").textContent=`Birthday Wish ${String(i+1).padStart(2,"0")}`;
+ $("reason").textContent=data[i][0];$("note").textContent=data[i][1];$("secret").textContent="💌 Secret Note: "+data[i][2];$("pageNo").textContent=`${String(i+1).padStart(2,"0")} / 12`;
+}
+function openBook(){opened=true;$("book").classList.add("open");startMusic()}
+$("open").onclick=openBook;
+$("next").onclick=()=>{if(!opened)return; if(i===11){finale();return} i++;render()};
+$("prev").onclick=()=>{if(!opened)return;i=Math.max(0,i-1);render()};
+function finale(){
+  confetti();playCrescendo();
+  setTimeout(()=>{i=0;render();$("book").classList.remove("open");opened=false;$("open").textContent="🌹 Read Again";},1200);
+}
+$("music").onclick=()=>{if(musicOn){stopMusic();$("music").textContent="🎵 Music"}else{startMusic();$("music").textContent="🔇 Music Off"}};
+
+function confetti(){
+ const symbols=["❤","🌹","✨","💕","🎉","✦"];
+ for(let n=0;n<150;n++){let c=document.createElement("i");c.className="confetti";c.textContent=symbols[Math.floor(Math.random()*symbols.length)];c.style.left=Math.random()*100+"vw";c.style.fontSize=(10+Math.random()*17)+"px";c.style.animationDelay=Math.random()*1.1+"s";document.body.appendChild(c);setTimeout(()=>c.remove(),4800)}
+}
+function spark(e){
+ for(let n=0;n<5;n++){let s=document.createElement("span");s.className="spark";s.textContent=["❤","💖","✨","💕","🌸"][Math.floor(Math.random()*5)];s.style.left=e.clientX+"px";s.style.top=e.clientY+"px";s.style.setProperty("--x",(Math.random()*140-70)+"px");s.style.setProperty("--y",(Math.random()*140-70)+"px");document.body.appendChild(s);setTimeout(()=>s.remove(),1100)}
+}
+document.addEventListener("pointerdown",e=>{if(!e.target.closest(".panel"))spark(e)});
+
+let ac=null,master=null,musicOn=false,melodyTimer=null;
+const melody=[261.63,329.63,392,523.25,659.25,523.25,392,329.63,293.66,349.23,440,587.33,440,349.23,392];
+function startMusic(){
+ if(musicOn)return;ac=ac||new (window.AudioContext||window.webkitAudioContext)();master=master||ac.createGain();master.gain.value=.028;master.connect(ac.destination);musicOn=true;let k=0;
+ melodyTimer=setInterval(()=>{let o=ac.createOscillator(),g=ac.createGain(),f=ac.createBiquadFilter();o.type=k%3?"triangle":"sine";o.frequency.value=melody[k++%melody.length];f.type="lowpass";f.frequency.value=2200;g.gain.setValueAtTime(.001,ac.currentTime);g.gain.exponentialRampToValueAtTime(.35,ac.currentTime+.035);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.72);o.connect(f);f.connect(g);g.connect(master);o.start();o.stop(ac.currentTime+.75)},430)
+}
+function stopMusic(){musicOn=false;clearInterval(melodyTimer)}
+function playCrescendo(){if(!ac)return;[261.63,329.63,392,523.25,659.25,783.99].forEach((f,j)=>{let o=ac.createOscillator(),g=ac.createGain();o.type="sine";o.frequency.value=f;g.gain.setValueAtTime(.001,ac.currentTime+j*.08);g.gain.exponentialRampToValueAtTime(.4,ac.currentTime+j*.08+.1);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+j*.08+2.4);o.connect(g);g.connect(master);o.start(ac.currentTime+j*.08);o.stop(ac.currentTime+j*.08+2.5)})}
+
+/* Canvas atmosphere: stars + bokeh + rose petals */
+const cv=$("fx"),cx=cv.getContext("2d");let W,H,particles=[];
+function resize(){W=cv.width=innerWidth*devicePixelRatio;H=cv.height=innerHeight*devicePixelRatio;cx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);W=innerWidth;H=innerHeight}
+resize();addEventListener("resize",resize);
+for(let n=0;n<90;n++)particles.push({x:Math.random(),y:Math.random(),r:Math.random()*2+.3,s:Math.random()*.0005+.00015,a:Math.random()*.7+.1,petal:Math.random()>.65});
+function draw(){cx.clearRect(0,0,W,H);particles.forEach(p=>{p.y-=p.s;if(p.y<0)p.y=1;p.x+=(Math.sin(p.y*25)*.0002);cx.globalAlpha=p.a;cx.fillStyle=p.petal?"#d7a86a":"#fff1d0";cx.beginPath();if(p.petal){cx.ellipse(p.x*W,p.y*H,p.r*2,p.r*4,p.y*8,0,Math.PI*2)}else cx.arc(p.x*W,p.y*H,p.r,0,Math.PI*2);cx.fill()});requestAnimationFrame(draw)}
+draw();
+
+function buildForm(){
+ $("form").innerHTML="";
+ data.forEach((x,n)=>{let d=document.createElement("div");d.className="row";d.innerHTML=`<b>${n+1}. Reason</b><input data-a="${n}" value="${escapeHtml(x[0])}"><textarea data-b="${n}" placeholder="Birthday message">${escapeHtml(x[1])}</textarea><textarea data-c="${n}" placeholder="Secret note">${escapeHtml(x[2])}</textarea>`;$("form").appendChild(d)})
+}
+function escapeHtml(s){return s.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll('"',"&quot;")}
+$("custom").onclick=()=>{$("modal").classList.add("show");buildForm()};
+$("cancel").onclick=()=>$("modal").classList.remove("show");
+$("save").onclick=()=>{data=data.map((x,n)=>[$(`[data-a="${n}"]`).value,$(`[data-b="${n}"]`).value,$(`[data-c="${n}"]`).value]);localStorage.setItem("akhiBirthdayBook",JSON.stringify(data));render();$("modal").classList.remove("show")};
+$("reset").onclick=()=>{data=defaults.map(x=>[...x]);localStorage.setItem("akhiBirthdayBook",JSON.stringify(data));buildForm();render()};
+document.addEventListener("keydown",e=>{if(e.key==="ArrowRight")$("next").click();if(e.key==="ArrowLeft")$("prev").click();if(e.code==="Space"){e.preventDefault();$("next").click()}});
+render();
+</script>
+</body>
+</html>
