@@ -1,4 +1,28 @@
-<!doctype html>
+<audio id="birthdayMusic" loop preload="auto">
+    <source src="birthday.mp3" type="audio/mpeg">
+</audio>
+
+<button id="musicBtn" onclick="toggleMusic()" 
+style="position:fixed;bottom:20px;right:20px;z-index:99999;
+padding:12px 20px;border:none;border-radius:30px;
+background:#d4af37;color:#fff;font-size:16px;">
+🎵 Play Music
+</button>
+
+<script>
+const music = document.getElementById("birthdayMusic");
+const musicBtn = document.getElementById("musicBtn");
+
+function toggleMusic() {
+    if (music.paused) {
+        music.play();
+        musicBtn.innerHTML = "⏸️ Pause Music";
+    } else {
+        music.pause();
+        musicBtn.innerHTML = "🎵 Play Music";
+    }
+}
+</script> html>
 <html lang="bn">
 <head>
 <meta charset="utf-8">
